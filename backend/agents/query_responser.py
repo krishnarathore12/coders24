@@ -53,32 +53,4 @@ query_responser = Agent(
     debug_mode=True
 )
 
-def get_response(user_input: str) -> str:
-    """
-    Takes a raw user input, searches the knowledge base, 
-    and returns the RAG-enhanced response.
-    """
-    response = query_responser.run(user_input)
-    return response.content
 
-# --- Testing the Agent ---
-if __name__ == "__main__":
-    print("Loading knowledge base...")
-    # This will now use Sentence Transformers to embed the PDF content
-    # knowledge_base.load(recreate=False) 
-    
-    knowledge_base.add_content(
-        url="https://arxiv.org/pdf/2512.16916"
-    )
-    
-    raw_query = "what is gravitational waveforms"
-    
-    print("-" * 50)
-    print(f"User Query: {raw_query}")
-    print("-" * 50)
-    
-    enhanced_response = get_response(raw_query)
-    
-    print("-" * 50)
-    print("RAG Response:")
-    print(enhanced_response)
