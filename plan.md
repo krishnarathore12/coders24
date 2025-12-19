@@ -1,4 +1,4 @@
-# RAG Document Chat Application
+# Agni RAG 
 
 This project is a robust Retrieval-Augmented Generation (RAG) application designed to allow users to upload documents and interact with them through a natural language chat interface.
 
