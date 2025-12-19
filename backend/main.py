@@ -3,7 +3,7 @@ import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-
+from fastapi.middleware.cors import CORSMiddleware
 # Import your agents from their respective modules
 # Ensure these files (agents/query_router.py, etc.) exist in your directory structure
 from agents.query_router import router_agent
@@ -20,6 +20,14 @@ api = FastAPI(
     title="Agni RAG Pipeline",
     description="API for Query Routing, Enhancement, and RAG Response",
     version="0.1.0"
+)
+
+api.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins (change to specific domains in production)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
 )
 
 # --- Pydantic Models ---
