@@ -35,14 +35,14 @@ async def ingest_document(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, buffer)
             
         # 2. Parse Document
-        print(f"📄 Parsing {file.filename}...")
+        print(f" Parsing {file.filename}...")
         parser = PDFParser()
         documents = parser.parse(file_location)
         
         if not documents:
             raise HTTPException(status_code=400, detail="No content extracted.")
 
-        print(f"✅ Extracted {len(documents)} chunks. Generating embeddings...")
+        print(f" Extracted {len(documents)} chunks. Generating embeddings...")
 
         # 3. Prepare Points for Qdrant (Manual Embedding & Construction)
         points = []
@@ -72,22 +72,22 @@ async def ingest_document(file: UploadFile = File(...)):
         try:
             client.get_collection(collection_name)
         except Exception:
-            print(f"🔧 Creating collection '{collection_name}'...")
+            print(f" Creating collection '{collection_name}'...")
             client.create_collection(
                 collection_name=collection_name,
                 vectors_config=VectorParams(size=len(points[0].vector), distance=Distance.COSINE)
             )
 
         # 5. Upsert to Qdrant
-        print(f"🚀 Upserting {len(points)} vectors to Qdrant...")
+        print(f" Upserting {len(points)} vectors to Qdrant...")
         client.upsert(
             collection_name=collection_name,
             points=points
         )
-        print("✅ Indexing complete!")
+        print(" Indexing complete!")
         
     except Exception as e:
-        print("❌ Error during ingestion:")
+        print(" Error during ingestion:")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Ingestion failed: {str(e)}")
 
