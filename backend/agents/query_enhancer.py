@@ -5,10 +5,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Define the Query Enhancer Agent
 query_enhancer = Agent(
     name="Query Enhancer",
-    model=Gemini(id="gemini-2.5-flash"), # Fast model is best for this step
+    model=Gemini(id="gemini-2.5-flash"), 
     description="I am an expert at refining search queries for vector databases.",
     instructions=[
         "You are a Query Rewriting Engine for a RAG (Retrieval Augmented Generation) system.",
@@ -19,21 +18,5 @@ query_enhancer = Agent(
         "3. Focus on keywords that would likely appear in technical documentation.",
         "4. Output ONLY the rewritten query. Do not add explanations.",
     ],
-    markdown=False, # We want raw text output
+    markdown=False, 
 )
-
-# Example Usage Function
-def get_enhanced_query(user_input: str) -> str:
-    """
-    Takes a raw user input and returns the enhanced query string.
-    """
-    response = query_enhancer.run(user_input)
-    return response.content
-
-# --- Testing the Agent ---
-if __name__ == "__main__":
-    raw_query = "code not working in main.py what do"
-    
-    print(f"Original: {raw_query}")
-    enhanced = get_enhanced_query(raw_query)
-    print(f"Enhanced: {enhanced}")
