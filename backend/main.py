@@ -7,8 +7,9 @@ load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# Import routes
-from app.api.endpoints import ingest
+# --- UPDATED IMPORT ---
+# Now importing from the new 'preprocessing' folder
+from app import ingest 
 
 app = FastAPI(
     title="Agni RAG API",
@@ -31,8 +32,8 @@ app.add_middleware(
 )
 
 # --- Register Routers ---
+# Prefix remains the same, but the source module has changed
 app.include_router(ingest.router, prefix="/api/documents", tags=["Documents"])
-
 
 @app.get("/")
 def health_check():

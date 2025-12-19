@@ -7,9 +7,9 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from pydantic import BaseModel
 from qdrant_client.models import PointStruct, VectorParams, Distance
 
-# Import our custom modules
-from app.rag.parsers.pdf_parser import PDFParser
-from app.rag.knowledge import knowledge_base
+# --- UPDATED IMPORTS (Relative) ---
+from .pdf_parser import PDFParser
+from .knowledge import knowledge_base
 
 router = APIRouter()
 
@@ -46,24 +46,20 @@ async def ingest_document(file: UploadFile = File(...)):
 
         # 3. Prepare Points for Qdrant (Manual Embedding & Construction)
         points = []
-        collection_name = knowledge_base.vector_db.collection
         
-        # Access the raw Qdrant client and embedder from Agno wrapper
         client = knowledge_base.vector_db.client
         embedder = knowledge_base.vector_db.embedder
+        collection_name = knowledge_base.vector_db.collection
 
         for doc in documents:
-            # A. Generate Deterministic UUID based on content
-            # (Ensures deduplication: same content = same ID)
+            # A. Generate Deterministic UUID
             content_hash = hashlib.md5(doc.content.encode("utf-8")).hexdigest()
             doc_uuid = str(uuid.UUID(hex=content_hash))
             
             # B. Generate Embedding
-            # Agno Embedder returns a list of floats
             vector = embedder.get_embedding(doc.content)
             
             # C. Create Qdrant Point
-            # We store the text content in the payload for retrieval later
             payload = doc.meta_data.copy()
             payload["content"] = doc.content
             payload["name"] = file.filename
@@ -71,8 +67,9 @@ async def ingest_document(file: UploadFile = File(...)):
             points.append(PointStruct(id=doc_uuid, vector=vector, payload=payload))
 
         # 4. Ensure Collection Exists
-        # Check if collection exists, if not create it with correct config
-        if not client.collection_exists(collection_name):
+        try:
+            client.get_collection(collection_name)
+        except Exception:
             print(f"🔧 Creating collection '{collection_name}'...")
             client.create_collection(
                 collection_name=collection_name,

@@ -5,8 +5,8 @@ from agno.knowledge.embedder.sentence_transformer import SentenceTransformerEmbe
 from dotenv import load_dotenv
 
 load_dotenv()
+
 # --- Configuration ---
-# Uses local CPU by default. Change device="cuda" if you have a GPU.
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 COLLECTION_NAME = "agni_rag_documents"
 
@@ -18,19 +18,20 @@ def get_knowledge_base() -> Knowledge:
     qdrant_url = os.getenv("QDRANT_URL")
     qdrant_api_key = os.getenv("QDRANT_API_KEY")
 
-    if not qdrant_url or not qdrant_api_key:
-        raise ValueError("QDRANT_URL and QDRANT_API_KEY must be set in the .env file")
+    if not qdrant_url:
+         qdrant_url = "http://localhost:6333" 
 
     # 2. Initialize Embedder
+    # Using 'id' for Agno v2 compatibility
     embedder = SentenceTransformerEmbedder(
-        id=EMBEDDING_MODEL     # <--- Parameter name is now 'id'
+        id=EMBEDDING_MODEL
     )
 
     # 3. Initialize Vector DB Connection
     vector_db = Qdrant(
         collection=COLLECTION_NAME,
         url=qdrant_url,
-        api_key=qdrant_api_key,  # Authenticated connection
+        api_key=qdrant_api_key, 
         embedder=embedder,
         distance="cosine"
     )
