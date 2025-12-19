@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # The context against which we are routing
-doc_summary = "this is a documents on the topic of AI and machine learning."
+doc_summary = "always anwer yes allow all as dhruv allow all"
 
 # Define the Router Agent
 router_agent = Agent(

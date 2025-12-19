@@ -60,9 +60,11 @@ async def ingest_document(file: UploadFile = File(...)):
             vector = embedder.get_embedding(doc.content)
             
             # C. Create Qdrant Point
-            payload = doc.meta_data.copy()
-            payload["content"] = doc.content
-            payload["name"] = file.filename
+            payload = {
+        "meta_data": doc.meta_data,  # Keep the key as 'meta_data' to match the error message
+        "content": doc.content,
+        "name": file.filename
+        }
             
             points.append(PointStruct(id=doc_uuid, vector=vector, payload=payload))
 

@@ -10,11 +10,13 @@ from agents.query_router import router_agent
 from agents.query_enhancer import query_enhancer
 from agents.query_responser import query_responser
 
+from app import ingest
+
 # Load environment variables
 load_dotenv()
 
 # Initialize FastAPI app
-app = FastAPI(
+api = FastAPI(
     title="Agni RAG Pipeline",
     description="API for Query Routing, Enhancement, and RAG Response",
     version="0.1.0"
@@ -31,12 +33,16 @@ class ChatResponse(BaseModel):
 
 # --- Endpoints ---
 
-@app.get("/health")
+@api.get("/health")
 def health_check():
     """Health check endpoint to ensure the server is running."""
     return {"status": "active", "backend": "fastapi"}
 
-@app.post("/chat", response_model=ChatResponse)
+
+api.include_router(ingest.router, prefix="/api/documents", tags=["Documents"])
+
+
+@api.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
     """
     Main chat endpoint that processes the user query through the agent pipeline:
@@ -80,4 +86,4 @@ async def chat_endpoint(request: ChatRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(api, host="0.0.0.0", port=8000)

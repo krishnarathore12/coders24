@@ -6,7 +6,7 @@ from agno.knowledge import Knowledge
 from agno.vectordb.qdrant import Qdrant
 from agno.knowledge.embedder.sentence_transformer import SentenceTransformerEmbedder
 from agno.knowledge.reranker.cohere import CohereReranker
-
+from app.knowledge import knowledge_base
 load_dotenv()
 
 qdrant_api_key = os.getenv("QDRANT_API_KEY")
@@ -14,9 +14,9 @@ qdrant_url = os.getenv("QDRANT_URL")
 cohere_api_key = os.getenv("COHERE_API_KEY") 
 google_api_key = os.getenv("GOOGLE_API_KEY")
 
-collection_name = "agni-rag-documents"
+collection_name = "agni_rag_documents"
 
-embedder = SentenceTransformerEmbedder()
+embedder = SentenceTransformerEmbedder(id="all-MiniLM-L6-v2")
 reranker = CohereReranker(
     model="rerank-english-v3.0", 
     api_key=cohere_api_key,
