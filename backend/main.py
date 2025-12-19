@@ -40,5 +40,4 @@ def health_check():
     return {"status": "active", "system": "Agni RAG Backend"}
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    main()
