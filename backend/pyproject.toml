@@ -4,4 +4,14 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "agno>=2.3.16",
+    "fastapi>=0.125.0",
+    "google-genai>=1.56.0",
+    "pymupdf>=1.26.7",
+    "qdrant-client>=1.16.2",
+    "sentence-transformers>=5.2.0",
+    "torch>=2.9.1",
+    "unicorn>=2.1.4",
+    "uvicorn>=0.38.0",
+]
